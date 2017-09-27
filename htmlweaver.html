@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>:: HTML WEAVER ::</title>
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+<div id="pagebuilder">
+<header>
+<div class="container">
+<form id="create-page">
+<div class="form-group">
+<label class="brand">Create</label>
+<input type="text" class="form-control" id="tagname" placeholder="Enter Tag Name">
+<input type="text" class="form-control" id="tagtext" placeholder="Tag Text">
+<input type="submit" value="+" id="add"> <input type="submit" id="apply" value="Apply">
+</div>
+<div class="form-group attributes"><label>Attributes</label>
+<div class="checkbox"><input type="checkbox" value="id">ID <input type="text" name="attrval[]"></div>
+<div class="checkbox"><input type="checkbox" value="class"> Class  <input type="text" name="attrval[]"></div>
+<div class="checkbox"><input type="checkbox" value="href"> href  <input type="text" name="attrval[]"></div>
+<div class="checkbox"><input type="checkbox" value="rel"> rel  <input type="text" name="attrval[]"></div>
+<div class="checkbox"><input type="checkbox" value="other">other <input type="text"> <input type="text"></div>
+</div>
+</form>
+</div>
+</header>
+<div class="container code">
+<textarea class="code-control">
+</textarea>
+ 
+</div>
+</div>
+<script src="jquery.min.js" type="text/javascript"></script>
+<script>
+$(document).ready(function(){
+$(".attributes input[type='checkbox']").attr("disabled", true);
+$('#tagname').change(function () {
+if($(this).val() != ""){
+$(".attributes input[type='checkbox']").attr("disabled", false);
+}
+else{
+$(".attributes input[type='checkbox']").attr("disabled", true);
+}
+});
+
+function InsertAtCaret(myValue) {
+ 
+    return $(".code-control").each(function(i) {
+        if (document.selection) {
+            //For browsers like Internet Explorer
+            this.focus();
+            sel = document.selection.createRange();
+            sel.text = myValue;
+            this.focus();
+        } else if (this.selectionStart || this.selectionStart == '0') {
+            //For browsers like Firefox and Webkit based
+            var startPos = this.selectionStart;
+            var endPos = this.selectionEnd;
+            var scrollTop = this.scrollTop;
+            this.value = this.value.substring(0, startPos) + myValue + this.value.substring(endPos, this.value.length);
+            this.focus();
+            this.selectionStart = startPos + myValue.length;
+            this.selectionEnd = startPos + myValue.length;
+            this.scrollTop = scrollTop;
+        } else {
+            this.value += myValue;
+            this.focus();
+        }
+    })
+}
+	 
+$("#add").click(function () {
+	var val = $(":checkbox:checked").map(function(){ return $(this).val() }).get().join(' ');
+	var values = $("input[name='attrval[]']").map(function(){ return $(this).val() }).get().join(' ');
+	var addtag;
+	 var tagvalue= $("#tagname").val();
+	 var textdata= $("#tagtext").val();
+	 $(':checkbox:checked').each(function(){
+	 addtag =  "<" + tagvalue  + val + '="' + values + '"' + ">" + textdata + "</" + tagvalue + ">";
+	 console.log(val);
+	 console.log(values);
+	 });     
+	  
+	 if (tagvalue){
+	 InsertAtCaret(addtag);
+	 $("#create-page")[0].reset();
+	 $("#tagname").focus();
+	 }
+});
+<!-- var selection = document.getSelection(); -->
+<!-- var cursorPos = selection.anchorOffset; -->
+
+     
+<!-- $("#add").click(function () { -->
+	<!-- var tagvalue= $("#tagname").val(); -->
+	<!-- var textdata= $("#tagtext").val(); -->
+     <!-- var addtag =  "<" + tagvalue + ">" + textdata + "</" + tagvalue + ">"; -->
+     <!-- //$('.code-control').append(document.createTextNode("<div></div>")); -->
+	 <!-- $(".code-control").append(document.createTextNode(addtag)); -->
+	 <!-- $("#create-page")[0].reset(); -->
+  <!-- }); -->
+
+});
+</script>
+</body>
+</html>
